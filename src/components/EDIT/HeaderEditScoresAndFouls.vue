@@ -7,23 +7,16 @@
 						<i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i>
 					</router-link>
 					<div>
-						<p>Manager Players</p>
+						<p>Edit Scores & Fouls</p>
 					</div>
 				</div>
 				<div class="setting-clock">
 					<div class="start">
-						<p
-							@click="for_switch_teams()"
-							style="background-color: #b1b1b1;color:white;"
-						>
-							Switch Teams
-						</p>
+						<slot name="one" />
+						<slot name="two" />
+						<slot name="three" />
+						<slot name="four" />
 					</div>
-					<router-link to="/marker" class="edit" style="text-decoration:none">
-						<p style="background:rgb(29, 161, 242);color:white;">
-							Done
-						</p>
-					</router-link>
 				</div>
 			</div>
 		</div>
@@ -31,22 +24,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
-export default {
-	computed: {
-		...mapState({ manager: (state) => state.manager.click_for_manager }),
-	},
-	methods: {
-		for_switch_teams() {
-			if (this.manager == "first") {
-				this.$emit("switch_teams", "second");
-			} else if (this.manager == "second") {
-				this.$emit("switch_teams", "first");
-			}
-		},
-	},
-};
+export default {};
 </script>
 
 <style scoped>
@@ -66,6 +44,14 @@ export default {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+}
+
+.start {
+	display: flex;
+}
+
+.start p {
+	margin: 0 5px;
 }
 
 .btn-back i {

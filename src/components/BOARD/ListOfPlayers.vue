@@ -18,7 +18,9 @@
 				:style="style_backgroud"
 				v-for="teams in team.players"
 				:key="teams.id"
-				@click="get_click_player(teams.player, teams.number, team.team)"
+				@click="
+					get_click_player(teams.player, teams.number, team.team, team.color)
+				"
 			>
 				<div
 					v-if="player_select != teams.number"
@@ -128,7 +130,7 @@ export default {
 			if (technical_foul == true) return "Technical Foul";
 			if (unsportsmanlike_foul == true) return "Unsportsmanlike Foul";
 		},
-		get_click_player(player, number, teams) {
+		get_click_player(player, number, teams, color) {
 			if (this.click_and_player == false) {
 				this.player_click(true);
 
@@ -146,6 +148,7 @@ export default {
 					player: player,
 					number: number,
 					team: teams,
+					color: color,
 				});
 
 				return (this.player_select = click_player.number);

@@ -22,7 +22,8 @@
 								color: click_and_player
 									? 'rgba(170, 170, 170, 0.425)'
 									: 'rgb(170, 170, 170)',
-								border: first_team.foul >= 5 ? '1px solid orange' : 'none',
+								border:
+									total_foul_first_team >= 5 ? '1px solid orange' : 'none',
 							}"
 						>
 							<span
@@ -31,7 +32,7 @@
 										? 'rgba(255, 166, 0, 0.425)'
 										: 'orange',
 								}"
-								>{{ first_team.foul }}</span
+								>{{ total_foul_first_team }}</span
 							>
 							<p>FOULS THIS PERIOD</p>
 						</div>
@@ -114,7 +115,8 @@
 								color: click_and_player
 									? 'rgba(170, 170, 170, 0.425)'
 									: 'rgb(170, 170, 170)',
-								border: second_team.foul >= 5 ? '1px solid orange' : 'none',
+								border:
+									total_foul_second_team >= 5 ? '1px solid orange' : 'none',
 							}"
 						>
 							<span
@@ -123,7 +125,7 @@
 										? 'rgba(255, 166, 0, 0.425)'
 										: 'orange',
 								}"
-								>{{ second_team.foul }}</span
+								>{{ total_foul_second_team }}</span
 							>
 							<p>FOULS THIS PERIOD</p>
 						</div>
@@ -159,7 +161,19 @@ import { mapState, mapGetters } from "vuex";
 export default {
 	computed: {
 		...mapState(["click_and_player", "first_team", "second_team"]),
-		...mapGetters(["total_point_first_team", "total_point_second_team"]),
+		...mapGetters([
+			"total_point_first_team",
+			"total_point_second_team",
+			"total_foul_first_team",
+			"total_foul_second_team",
+		]),
+		map_foul_for_show(team) {
+			return team
+				.map((data) => {
+					return data.foul;
+				})
+				.reduce((a, b) => a + b);
+		},
 	},
 };
 </script>

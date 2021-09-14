@@ -7,12 +7,10 @@
 						<i style="color:black" class="fa fa-pencil" aria-hidden="true"></i>
 					</div>
 					<div class="edit-color">
-						<DesignForJersey v-bind:color="'rgb(255, 0, 0)'" />
+						<DesignForJersey v-bind:color="'rgb(' + team.color + ')'" />
 					</div>
 					<div class="show-name">
-						<p>
-							Milton Mutants Men's A Grade
-						</p>
+						<p>{{ team.team }}</p>
 					</div>
 				</div>
 			</div>
@@ -24,6 +22,7 @@
 import DesignForJersey from "../DESIGN/DesignForJersey";
 
 export default {
+	props: ["team"],
 	components: {
 		DesignForJersey,
 	},

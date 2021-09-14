@@ -1,7 +1,10 @@
 <template>
 	<div>
 		<div class="wrap-all">
-			<div class="add-btn">
+			<div class="desc-header">
+				<span>Find or add coaches and players</span>
+			</div>
+			<div class="add-btn" @click="for_show_add_player_manager(true)">
 				<div class="icon">
 					<i class="fa fa-user-plus" aria-hidden="true"></i>
 				</div>
@@ -14,10 +17,31 @@
 </template>
 
 <script>
-export default {};
+export default {
+	methods: {
+		for_show_add_player_manager(bool) {
+			this.$emit("show_player_for_manager", bool);
+		},
+	},
+};
 </script>
 
 <style scoped>
+.wrap-all {
+	padding: 7px;
+	margin: 13px 0;
+}
+
+.desc-header {
+	margin-bottom: 10px;
+	margin: 5px 0;
+}
+
+.desc-header span {
+	font-size: 12px;
+	color: white;
+}
+
 .add-btn {
 	display: inline-block;
 

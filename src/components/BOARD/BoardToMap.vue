@@ -21,10 +21,10 @@
 							class="dropdown-content"
 							:style="{ display: click_timeout ? 'block' : 'none' }"
 						>
-							<p @click="team_for_timeout(first_team.team)">
+							<p @click="team_for_timeout(first_team)">
 								{{ first_team.team }}
 							</p>
-							<p @click="team_for_timeout(second_team.team)">
+							<p @click="team_for_timeout(second_team)">
 								{{ second_team.team }}
 							</p>
 						</div>
@@ -64,12 +64,14 @@
 					>
 						<span>Undo Last</span>
 					</div>
-					<div
+					<router-link
+						to="/edit"
+						style="text-decoration:none;color:black;"
 						class="edit-score"
 						:style="{ background: click_and_player ? '#e4e2e26c' : '#e4e2e2' }"
 					>
 						<span>Edit Score & Fouls</span>
-					</div>
+					</router-link>
 					<div
 						class="manager"
 						:style="{
@@ -84,8 +86,7 @@
 							class="dropdown-content"
 							:style="{ display: click_manager ? 'block' : 'none' }"
 						>
-							<p>Milton Mutants Men's A Grade</p>
-							<p>Southern Mariners</p>
+							<slot name="manager" />
 						</div>
 					</div>
 				</div>
@@ -109,12 +110,13 @@ export default {
 		};
 	},
 	methods: {
-		...mapMutations(["timeout_team"]),
+		...mapMutations({ timeout_team: "timeout_team" }),
 		other_option(data) {
 			this.$emit("for_other_option", data);
 		},
 		team_for_timeout(data) {
-			this.timeout_team({ team: data });
+			this.timeout_team({ team: data.team });
+			this.$emit("for_edit_timeout", { team: data.team, color: data.color });
 		},
 		click_for_timeout() {
 			if (this.click_timeout == true) return (this.click_timeout = false);

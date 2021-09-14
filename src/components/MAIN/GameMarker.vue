@@ -77,7 +77,10 @@
 					/>
 				</div>
 				<div class="map">
-					<BoardToMap v-on:for_other_option="for_other_option">
+					<BoardToMap
+						v-on:for_other_option="for_other_option"
+						v-on:for_edit_timeout="for_edit_timeout"
+					>
 						<template v-slot:one_point>
 							<div
 								class="one-point"
@@ -106,6 +109,14 @@
 							<div class="foul" @click="foul_for_player(1), dark_click()">
 								<span>Foul</span>
 							</div>
+						</template>
+						<template v-slot:manager>
+							<p @click="for_manager('first')">
+								<span>{{ first_team.team }}</span>
+							</p>
+							<p @click="for_manager('second')">
+								<span>{{ second_team.team }}</span>
+							</p>
 						</template>
 					</BoardToMap>
 				</div>
@@ -155,6 +166,7 @@ export default {
 			player_with_click: "",
 			number_with_click: "",
 			team_select: "",
+			color_with_click: "",
 		};
 	},
 	computed: {
@@ -167,22 +179,32 @@ export default {
 		]),
 	},
 	methods: {
-		...mapMutations([
-			"point_player",
-			"player_click",
-			"foul_player",
-			"other_option",
-			"end_of_period",
-			"end_of_quarter_change_timeout",
-			"end_of_quarter_change_foul"
-		]),
+		...mapMutations({
+			point_player: "point_player",
+			player_click: "player_click",
+			foul_player: "foul_player",
+			other_option: "other_option",
+			end_of_period: "end_of_period",
+			end_of_quarter_change_timeout: "end_of_quarter_change_timeout",
+			end_of_quarter_change_foul: "end_of_quarter_change_foul",
+			manager_for_team: "manager/manager_for_team",
+			add_play_to_game_edit: "edit/add_play_to_game_edit",
+		}),
+		// manager
+		for_manager(team) {
+			this.manager_for_team(team);
+			this.$router.push("/manager");
+		},
+		// dark
 		dark_click() {
 			this.player_click(false);
 		},
+		//
 		player_select_with_click(data) {
 			this.player_with_click = data.player;
 			this.number_with_click = data.number;
 			this.team_select = data.team;
+			this.color_with_click = data.color;
 		},
 		points_for_player(point) {
 			this.point_player({
@@ -190,6 +212,18 @@ export default {
 				number: this.number_with_click,
 				team: this.team_select,
 				point: point,
+			});
+			// edit point
+			this.add_play_to_game_edit({
+				team: this.team_select,
+				color: this.color_with_click,
+				period: this.game.period,
+				time: this.minutes + ":" + this.seconds,
+				player: this.player_with_click,
+				number: this.number_with_click,
+				point: point,
+				edit: false,
+				changed_action: [],
 			});
 		},
 		foul_for_player(foul) {
@@ -199,6 +233,19 @@ export default {
 				team: this.team_select,
 				foul: foul,
 			});
+
+			// edit foul
+			this.add_play_to_game_edit({
+				team: this.team_select,
+				color: this.color_with_click,
+				period: this.game.period,
+				time: this.minutes + ":" + this.seconds,
+				player: this.player_with_click,
+				number: this.number_with_click,
+				fouls: foul,
+				edit: false,
+				changed_action: [],
+			});
 		},
 		for_other_option(data) {
 			this.other_option({
@@ -206,6 +253,31 @@ export default {
 				number: this.number_with_click,
 				team: this.team_select,
 				other: data,
+			});
+
+			// edit other
+			this.add_play_to_game_edit({
+				team: this.team_select,
+				color: this.color_with_click,
+				period: this.game.period,
+				time: this.minutes + ":" + this.seconds,
+				player: this.player_with_click,
+				number: this.number_with_click,
+				other: data,
+				edit: false,
+				changed_action: [],
+			});
+		},
+		// edit timeout
+		for_edit_timeout(data) {
+			this.add_play_to_game_edit({
+				team: data.team,
+				color: data.color,
+				period: this.game.period,
+				time: this.minutes + ":" + this.seconds,
+				timeout: "timeout",
+				edit: false,
+				changed_action: [],
 			});
 		},
 		update_counter(bool) {
